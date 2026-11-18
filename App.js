@@ -1,11 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, FlatList } from 'react-native';
 
 export default function App() {
+  const [filmes, setFilmes] = useState([]);
+
+  useEffect(() => {
+    fetch('https://ghibliapi.dev/films/')
+    .then(resposta => resposta.json())
+    .then(dados => setFilmes(dados))
+    .catch(erro => console.log(erro))
+  }, [])
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Text>filmes:</Text>
+      <FlatList
+        data={filmes}
+        keyExtractor={(item) => item.id}
+        renderItem={({item}) => (
+          <View>
+            <Text>{item.title}</Text>
+          </View>
+      )}
+      />
     </View>
   );
 }
@@ -13,7 +29,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ff0000',
     alignItems: 'center',
     justifyContent: 'center',
   },
